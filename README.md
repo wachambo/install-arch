@@ -2,12 +2,7 @@
 
 # Index
 1. [Preparation](#preparation)  
-  1.1. [Get Arch](#get-arch)  
-  1.2. [Set lo
 2. [Installation](#installation)  
-  2.2. [Format and Mount partitions](#format)  
-    * [GPT](#gpt)  
-    * [MBR](#mbr)  
 3. [Set-up](#setup)  
 4. [Resources](#resources)
 
@@ -15,7 +10,7 @@
 
 ### [Preparation](#preparation)
 
-##### [Get Arch](#get-arch)
+##### Get Arch
 Download the latest ISO image from https://www.archlinux.org/download/  
 Write to a USB stick
 ```
@@ -38,7 +33,7 @@ dhcpcd daemon is enabled on boot for wired devices (eno1,...)
 # ping -c 3 www.google.com  # test it
 ```
 
-##### Use system clock (https://wiki.archlinux.org/index.php/time)
+##### Use system clock [(time)](https://wiki.archlinux.org/index.php/time)
 ```
 # timedatectl set-ntp true
 # timedatectl set-timezone Europe/Madrid
@@ -46,38 +41,52 @@ dhcpcd daemon is enabled on boot for wired devices (eno1,...)
 # timedatectl status
 ```
 
-##### [Format and  mount partitions](#format)
+##### Part the Disk [(GPT vs MBR)](https://wiki.archlinux.org/index.php/partitioning#Partition_table)
+###### MBR
 ```
 # cfdisk  # partition the disks
+  # Usual dance: New -> Partition Size -> Primary or Extended -> ...
+  ...
   [gpt]
-	sda1	2M		Bios boot		<- required on BIOS/GPT configuration
-	sda2	200M	Linux fileystem	<- /boot
-	sda3	20G		Linux fileystem	<- /
-	sda4	80G		Linux fileystem	<- /home
-	sda5	2G		Linux swap		<- Avoid with SSD
-	[Write] and [Quit]
-# mkfs -t ext4 /dev/sda2
+    sda1        2M          Bios boot	     <- required on BIOS/GPT configuration
+    sda2	200M        Linux fileystem  <- /boot
+    sda3        20G         Linux fileystem  <- /
+    sda4        80G         Linux fileystem  <- /home
+    sda5        2G          Linux swap	     <- Avoid with SSD!
+  [Write] and [Quit]
+```
+###### GPT
+TODO
+
+##### Make the FileSystem
+```	
+# mkfs -t ext4 /dev/sda2  # to create a new file system
 # mkfs -t ext4 /dev/sda3
 # mkfs -t ext4 /dev/sda4
--# mkswap /dev/sda4
--# swapon /dev/sda4  # activate swap
+``` 
 
+*Just in case you have Swap
+```
+# mkswap /dev/sda4
+# swapon /dev/sda4  # activate swap
+```
+
+##### Mount the partitions 
+```
 # mount /dev/sda3 /mnt
 # mkdir /mnt/boot /mnt/home
 # mount /dev/sda2 /mnt/boot
 # mount /dev/sda4 /mnt/home
 ```
 
+### Installation
 
-
-### Installation:
-
-##### Install base system and with pacstrap (installation script in Arch)
+##### Install base system and with *pacstrap* (installation script in Arch)
 ```
 # pacstrap /mnt base  # base system
 ```	
 
-##### Configure the system
+##### Configure the system [(mkinitcpio)](https://wiki.archlinux.org/index.php/Fstab)
 ```
 # genfstab -Up /mnt >> /mnt/etc/fstab  # generate fstab with UUIDs
 # arch-chroot /mnt                     # left the .iso and go to the new system
@@ -131,7 +140,7 @@ EOF
 # locale-gen
 ```
 
-Xorg keyboard
+Xorg keyboard [(keyboard in Xorg)](https://wiki.archlinux.org/index.php/Keyboard_configuration_in_Xorg#Using_X_configuration_files)
 ```	
 # localectl --no-convert set-x11-keymap es pc105	
   # It will save the configuration in '/etc/X11/xorg.conf.d/00-keyboard.conf', 
@@ -144,7 +153,7 @@ Xorg keyboard
   X11 Model: pc105
 ```
 
-##### Create a new user
+##### Create a new user [(users and groups)](https://wiki.archlinux.org/index.php/users_and_groups#Example_adding_a_user)
 ```
 # useradd -m -g users -G wheel -s /bin/bash wchmb
 # passwd wchmb	
@@ -158,7 +167,7 @@ $ ip link                      # or 'iw dev' for wireless devices
 # systemctl enable dhcpcd@eth0
 ```
 
-##### Fastest mirror
+##### Fastest mirror [(mirrors)](https://wiki.archlinux.org/index.php/mirrors)
 ```
 # cd /etc/pacman.d
 # cp mirrorlist mirrorlist.backup
@@ -166,7 +175,7 @@ $ ip link                      # or 'iw dev' for wireless devices
 # pacman -Syy  #update package list
 ```
 
-##### Graphical user interface (https://www.archlinux.org/groups/x86_64/xorg/)
+##### Graphical user interface [(xorg)](https://www.archlinux.org/groups/x86_64/xorg/)
 ```	
 $ lspci | grep -e VGA -e 3D       # If you do not know what graphics card you have
 # pacman -S xorg-server xorg-xinit xorg-utils xorg-server-utils  # default Xorg environment
@@ -185,7 +194,7 @@ Test X Windows System
 # exit    # quit
 ```
 
-##### Autostart X at login
+##### Autostart X at login [(xinitrc)](https://wiki.archlinux.org/index.php/xinitrc)
 ```
 $ cp /etc/X11/xinit/xinitrc ~/.xinitrc
 $ cat ~/.xinitrc
@@ -218,5 +227,5 @@ $ cat <<EOF >>  ~/.bash_profile
 [Resources](#resources)  
 [1] https://wiki.archlinux.org/index.php/beginners'_guide  
 [2] https://wiki.archlinux.org/index.php/General_recommendations  
-[3] https://wiki.archlinux.org/index.php/installation_guide
+[3] https://wiki.archlinux.org/index.php/installation_guide  
 [4] https://github.com/helmuthdu/aui  
