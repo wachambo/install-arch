@@ -1,16 +1,19 @@
 # arch-install
 
 # Index
-1. [Preparation]  
+1. [Preparation](#preparation)  
   1.1. [Get Arch](#get-arch)  
-2. [Installation]  
+  1.2. [Set lo
+2. [Installation](#installation)  
   2.2. [Format and Mount partitions](#format)  
     * [GPT](#gpt)  
     * [MBR](#mbr)  
-3. [Set-up]  
+3. [Set-up](#setup)  
 4. [Resources](#resources)
 
 
+
+### [Preparation](#preparation)
 
 ##### [Get Arch](#get-arch)
 Download the latest ISO image from https://www.archlinux.org/download/  
@@ -27,14 +30,15 @@ $ df
 # loadkeys es
 ```
 
-##### Connect to the Internet
+##### Connect to the Internet via WiFi
+dhcpcd daemon is enabled on boot for wired devices (eno1,...)
 ```
 # iw dev                    # list wireless interfaces
 # wifi-menu -o wlp3s0       # connect to specific interface
 # ping -c 3 www.google.com  # test it
 ```
 
-##### Use system clock
+##### Use system clock (https://wiki.archlinux.org/index.php/time)
 ```
 # timedatectl set-ntp true
 # timedatectl set-timezone Europe/Madrid
@@ -64,6 +68,8 @@ $ df
 # mount /dev/sda4 /mnt/home
 ```
 
+
+
 ### Installation:
 
 ##### Install base system and with pacstrap (installation script in Arch)
@@ -83,7 +89,7 @@ $ df
 ```	
 
 ##### Install a boot loader in BIOS/GPT
-! Attention: if you install 'os-prober' grub-mkconfig may fail
+_*Attention:* if you install ```os-prober```, ```grub-mkconfig``` may fail_
 ```
 # pacstrap /mnt grub                    # grub (and os-prober for search other OS)
 # grub-install /dev/sda                 # install the bootloader to drive
@@ -100,7 +106,7 @@ $ df
 
 	
 
-### Post-installation:
+### [Set-up](#setup)
 
 ##### Configure the network and locales
 ```
@@ -201,13 +207,13 @@ $ cat <<EOF >>  ~/.bash_profile
   EOF
 ```
 
-
 ##### Alternative: Use display manager
 ```
 # pacman -S gdm  # gdm, lxdm ...
 # systemctl enable gdm
 # systemctl start gdm
 ```
+
 
 [Resources](#resources)  
 [1] https://wiki.archlinux.org/index.php/beginners'_guide  
