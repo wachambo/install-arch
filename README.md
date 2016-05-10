@@ -7,10 +7,9 @@
 4. [Resources](#resources)
 
 
+# [Preparation](#preparation)
 
-### [Preparation](#preparation)
-
-##### Get Arch
+### Get Arch
 Download the latest ISO image from https://www.archlinux.org/download/  
 Write out to a USB stick
 ```
@@ -19,12 +18,12 @@ $ df
   /dev/sdc1  16G  7.5G  8.2G  48% /run/media/wchmb/347E-D4CB
 # dd if=/home/wchmb/Downloads/arch.iso of=/dev/sdc
 ```  
-##### Set keyboard layout
+### Set keyboard layout
 ```
 # loadkeys es
 ```
 
-##### Connect to the Internet via WiFi
+### Connect to the Internet via WiFi
 dhcpcd daemon is enabled on boot for wired devices (eno1,...)
 ```
 # iw dev                    # list wireless interfaces
@@ -32,7 +31,7 @@ dhcpcd daemon is enabled on boot for wired devices (eno1,...)
 # ping -c 3 www.google.com  # test it
 ```
 
-##### Use system clock [(time)](https://wiki.archlinux.org/index.php/time)
+### Use system clock [(time)](https://wiki.archlinux.org/index.php/time)
 ```
 # timedatectl set-ntp true
 # timedatectl set-timezone Europe/Madrid
@@ -40,8 +39,8 @@ dhcpcd daemon is enabled on boot for wired devices (eno1,...)
 # timedatectl status
 ```
 
-##### Part the Disk [(GPT vs MBR)](https://wiki.archlinux.org/index.php/partitioning#Partition_table)
-###### [MBR] (https://wiki.archlinux.org/index.php/GRUB#Master_Boot_Record_.28MBR.29_specific_instructions)
+### Part the Disk [(GPT vs MBR)](https://wiki.archlinux.org/index.php/partitioning#Partition_table)
+#### [MBR] (https://wiki.archlinux.org/index.php/GRUB#Master_Boot_Record_.28MBR.29_specific_instructions)
 ```
 # cfdisk  # partition the disks
   # Usual dance: New -> Partition Size -> Primary or Extended -> ...
@@ -63,10 +62,10 @@ vm.vfs_cache_pressure=50  # kernel's tendency to reclaim the memory which is
                           # used for caching, versus pagecache and swap (default 100)
 EOF
 ```
-###### [GPT](https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions)
+#### [GPT](https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions)
 TODO
 
-##### Make the FileSystem
+### Make the FileSystem
 ```	
 # mkfs -t ext4 /dev/sda2  # to create a new file system
 # mkfs -t ext4 /dev/sda3
@@ -79,7 +78,7 @@ TODO
 # swapon /dev/sda4  # activate swap
 ```
 
-##### Mount the partitions 
+### Mount the partitions 
 ```
 # mount /dev/sda3 /mnt
 # mkdir /mnt/boot /mnt/home
@@ -87,26 +86,26 @@ TODO
 # mount /dev/sda4 /mnt/home
 ```
 
-### Installation
+# Installation
 The goal of the bootstrapping procedure is to setup an environment from which the scripts from arch-install-scripts (such as **pacstrap** and **arch-chroot**) can be run.
 
-##### Install base system
+### Install base system
 ```
 # pacstrap /mnt base  # base system
 ```	
 
-##### Configure the system [(mkinitcpio)](https://wiki.archlinux.org/index.php/Fstab)
+### Configure the system [(mkinitcpio)](https://wiki.archlinux.org/index.php/Fstab)
 ```
 # genfstab -Up /mnt >> /mnt/etc/fstab  # generate fstab with UUIDs
 # arch-chroot /mnt                     # left the .iso and go to the new system
 ```
 
-##### Create a new initial RAM disk
+### Create a new initial RAM disk
 ```
 # mkinitcpio -p linux
 ```	
 
-##### Install a boot loader in BIOS/GPT
+### Install a boot loader in BIOS/GPT
 _*Attention:* if you install ```os-prober```, ```grub-mkconfig``` may fail_
 ```
 # pacstrap /mnt grub                    # grub (and os-prober for search other OS)
@@ -114,7 +113,7 @@ _*Attention:* if you install ```os-prober```, ```grub-mkconfig``` may fail_
 # grub-mkconfig –o /boot/grub/grub.cfg  # generate grub.cfg
 ```
 
-##### Finish
+### Finish
 ```
 # passwd          # set root password
 # exit            # exit the chroot environment and come back to .iso
@@ -124,15 +123,15 @@ _*Attention:* if you install ```os-prober```, ```grub-mkconfig``` may fail_
 
 	
 
-### [Set-up](#setup)
+# [Set-up](#setup)
 
-##### Configure the network and locales
+### Configure the network and locales
 ```
 # echo computer_name > /etc/hostname                      # set hostname
 # ln -s /usr/share/zoneinfo/Europe/Madrid /etc/localtime  # set time zone
 ```
 
-##### System language
+### System language
 Uncomment the needed locales in /etc/locale.gen and then:
 ```
 # cat <<EOF > /etc/locale.conf  # set system language
@@ -140,7 +139,7 @@ LANG="en_US.UTF-8"
 EOF
 ```	
 
-##### Console(TTY) keyboard
+### Console(TTY) keyboard
 ```
 # cat <<EOF > /etc/vconsole.conf  # make keyboard layout persistent
 KEYMAP=es
@@ -149,7 +148,7 @@ EOF
 # locale-gen
 ```
 
-##### Xorg keyboard [(keyboard in Xorg)](https://wiki.archlinux.org/index.php/Keyboard_configuration_in_Xorg#Using_X_configuration_files)
+### Xorg keyboard [(keyboard in Xorg)](https://wiki.archlinux.org/index.php/Keyboard_configuration_in_Xorg#Using_X_configuration_files)
 ```	
 # localectl --no-convert set-x11-keymap es pc105	
   # It will save the configuration in '/etc/X11/xorg.conf.d/00-keyboard.conf', 
@@ -162,21 +161,21 @@ EOF
   X11 Model: pc105
 ```
 
-##### Create a new user [(users and groups)](https://wiki.archlinux.org/index.php/users_and_groups#Example_adding_a_user)
+### Create a new user [(users and groups)](https://wiki.archlinux.org/index.php/users_and_groups#Example_adding_a_user)
 ```
 # useradd -m -g users -G wheel -s /bin/bash wchmb
 # passwd wchmb	
 # passwd -d wchmb  # to login without passwd
 ```
 
-##### Internet connection
+### Internet connection
 ```
 $ ip link                      # or 'iw dev' for wireless devices
 # systemctl start dhcpcd@eth0  # eth0 or enp0s3 or another wired interface...
 # systemctl enable dhcpcd@eth0
 ```
 
-##### Fastest mirror [(mirrors)](https://wiki.archlinux.org/index.php/mirrors)
+### Fastest mirror [(mirrors)](https://wiki.archlinux.org/index.php/mirrors)
 ```
 # cd /etc/pacman.d
 # cp mirrorlist mirrorlist.backup
@@ -184,7 +183,7 @@ $ ip link                      # or 'iw dev' for wireless devices
 # pacman -Syy  #update package list
 ```
 
-##### Graphical user interface [(xorg)](https://www.archlinux.org/groups/x86_64/xorg/)
+### Graphical user interface [(xorg)](https://www.archlinux.org/groups/x86_64/xorg/)
 ```	
 $ lspci | grep -e VGA -e 3D       # If you do not know what graphics card you have
 # pacman -S xorg-server xorg-xinit xorg-utils xorg-server-utils  # default Xorg environment
@@ -194,7 +193,7 @@ $ lspci | grep -e VGA -e 3D       # If you do not know what graphics card you ha
 # pacman -S xf86-input-synaptics  # touchpad support
 ```
 
-##### Test X Windows System
+### Test X Windows System
 Check that everything went well...and take a look back at the good old days
 ```
 # pacman -S xorg-twm xorg-xclock xterm    # some X programs
@@ -203,7 +202,7 @@ Check that everything went well...and take a look back at the good old days
 # pacman -Rns xorg-twm xorg-xclock xterm  # you can remove them after testing
 ```
 
-##### Autostart X at login [(xinitrc)](https://wiki.archlinux.org/index.php/xinitrc)
+### Autostart X at login [(xinitrc)](https://wiki.archlinux.org/index.php/xinitrc)
 ```
 $ cp /etc/X11/xinit/xinitrc ~/.xinitrc
 $ cat ~/.xinitrc
@@ -225,7 +224,7 @@ $ cat <<EOF >>  ~/.bash_profile
   EOF
 ```
 
-##### Alternative: Use display manager
+### Alternative: Use display manager
 Really needed? You kids...
 ```
 # pacman -S gdm  # gdm, lxdm ...
@@ -234,7 +233,7 @@ Really needed? You kids...
 ```
 
 
-[Resources](#resources)  
+# [Resources](#resources)  
 [1] https://wiki.archlinux.org/index.php/beginners'_guide  
 [2] https://wiki.archlinux.org/index.php/General_recommendations  
 [3] https://wiki.archlinux.org/index.php/installation_guide  
