@@ -12,14 +12,13 @@
 
 ##### Get Arch
 Download the latest ISO image from https://www.archlinux.org/download/  
-Write to a USB stick
+Write out to a USB stick
 ```
 $ df
   ...
   /dev/sdc1  16G  7.5G  8.2G  48% /run/media/wchmb/347E-D4CB
 # dd if=/home/wchmb/Downloads/arch.iso of=/dev/sdc
-```
-
+```  
 ##### Set keyboard layout
 ```
 # loadkeys es
@@ -42,7 +41,7 @@ dhcpcd daemon is enabled on boot for wired devices (eno1,...)
 ```
 
 ##### Part the Disk [(GPT vs MBR)](https://wiki.archlinux.org/index.php/partitioning#Partition_table)
-###### MBR
+###### [MBR] (https://wiki.archlinux.org/index.php/GRUB#Master_Boot_Record_.28MBR.29_specific_instructions)
 ```
 # cfdisk  # partition the disks
   # Usual dance: New -> Partition Size -> Primary or Extended -> ...
@@ -55,7 +54,16 @@ dhcpcd daemon is enabled on boot for wired devices (eno1,...)
     sda5        2G          Linux swap	     <- Avoid with SSD!
   [Write] and [Quit]
 ```
-###### GPT
+If you have >4GB of RAM, then you possibly don't need to create a Swap partition.  
+In other case: [(swappiness)](https://wiki.archlinux.org/index.php/Swap#Swappiness) [(Boost performance)](https://rudd-o.com/linux-and-free-software/tales-from-responsivenessland-why-linux-feels-slow-and-how-to-fix-that)
+```
+# cat <<EOF > /etc/sysctl.d/99-sysctl.conf
+vm.swappiness=10          # kernel's preference of swap space (default 60)
+vm.vfs_cache_pressure=50  # kernel's tendency to reclaim the memory which is 
+                          # used for caching, versus pagecache and swap (default 100)
+EOF
+```
+###### [GPT](https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions)
 TODO
 
 ##### Make the FileSystem
@@ -80,8 +88,9 @@ TODO
 ```
 
 ### Installation
+The goal of the bootstrapping procedure is to setup an environment from which the scripts from arch-install-scripts (such as **pacstrap** and **arch-chroot**) can be run.
 
-##### Install base system and with *pacstrap* (installation script in Arch)
+##### Install base system
 ```
 # pacstrap /mnt base  # base system
 ```	
@@ -123,15 +132,15 @@ _*Attention:* if you install ```os-prober```, ```grub-mkconfig``` may fail_
 # ln -s /usr/share/zoneinfo/Europe/Madrid /etc/localtime  # set time zone
 ```
 
-System language
-Uncomment the needed locales in /etc/locale.gen
+##### System language
+Uncomment the needed locales in /etc/locale.gen and then:
 ```
 # cat <<EOF > /etc/locale.conf  # set system language
 LANG="en_US.UTF-8"
 EOF
 ```	
 
-console(TTY) keyboard
+##### Console(TTY) keyboard
 ```
 # cat <<EOF > /etc/vconsole.conf  # make keyboard layout persistent
 KEYMAP=es
@@ -140,7 +149,7 @@ EOF
 # locale-gen
 ```
 
-Xorg keyboard [(keyboard in Xorg)](https://wiki.archlinux.org/index.php/Keyboard_configuration_in_Xorg#Using_X_configuration_files)
+##### Xorg keyboard [(keyboard in Xorg)](https://wiki.archlinux.org/index.php/Keyboard_configuration_in_Xorg#Using_X_configuration_files)
 ```	
 # localectl --no-convert set-x11-keymap es pc105	
   # It will save the configuration in '/etc/X11/xorg.conf.d/00-keyboard.conf', 
@@ -183,15 +192,15 @@ $ lspci | grep -e VGA -e 3D       # If you do not know what graphics card you ha
 # pacman -S xf86-video-intel      # intel video drivers
 # pacman -S xf86-video-nouveau    # nvidia video drivers
 # pacman -S xf86-input-synaptics  # touchpad support
-	
-# pacman -S xorg-twm xorg-xclock xterm	
 ```
-*After testing X you can remove 'xorg-twm', 'xorg-xclock' and 'xterm'*
 
-Test X Windows System
+##### Test X Windows System
+Check that everything went well...and take a look back at the good old days
 ```
-# startx  # run Xorg
-# exit    # quit
+# pacman -S xorg-twm xorg-xclock xterm    # some X programs
+# startx                                  # run Xorg and play
+# exit                                    # quit
+# pacman -Rns xorg-twm xorg-xclock xterm  # you can remove them after testing
 ```
 
 ##### Autostart X at login [(xinitrc)](https://wiki.archlinux.org/index.php/xinitrc)
@@ -217,6 +226,7 @@ $ cat <<EOF >>  ~/.bash_profile
 ```
 
 ##### Alternative: Use display manager
+Really needed? You kids...
 ```
 # pacman -S gdm  # gdm, lxdm ...
 # systemctl enable gdm
