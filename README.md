@@ -3,7 +3,7 @@
 # Index
 1. [Preparation](#preparation)  
 2. [Installation](#installation)  
-3. [Set-up](#setup)  
+3. [Set-up](#set-up)  
 4. [Resources](#resources)
 
 
@@ -40,7 +40,7 @@ dhcpcd daemon is enabled on boot for wired devices (eno1,...)
 ```
 
 ### Part the Disk [(GPT vs MBR)](https://wiki.archlinux.org/index.php/partitioning#Partition_table)
-#### [MBR] (https://wiki.archlinux.org/index.php/GRUB#Master_Boot_Record_.28MBR.29_specific_instructions)
+##### [MBR] (https://wiki.archlinux.org/index.php/GRUB#Master_Boot_Record_.28MBR.29_specific_instructions)
 ```
 # cfdisk  # partition the disks
   # Usual dance: New -> Partition Size -> Primary or Extended -> ...
@@ -62,7 +62,7 @@ vm.vfs_cache_pressure=50  # kernel's tendency to reclaim the memory which is
                           # used for caching, versus pagecache and swap (default 100)
 EOF
 ```
-#### [GPT](https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions)
+##### [GPT](https://wiki.archlinux.org/index.php/GRUB#GUID_Partition_Table_.28GPT.29_specific_instructions)
 TODO
 
 ### Make the FileSystem
@@ -123,12 +123,31 @@ _*Attention:* if you install ```os-prober```, ```grub-mkconfig``` may fail_
 
 	
 
-# [Set-up](#setup)
+# [Set-up](#set-up)
+Configure the network, locales, X and register a new user
 
-### Configure the network and locales
+### Hostname
 ```
 # echo computer_name > /etc/hostname                      # set hostname
 # ln -s /usr/share/zoneinfo/Europe/Madrid /etc/localtime  # set time zone
+```
+
+### Internet connection
+##### Wired
+```
+$ ip link                      # or 'iw dev' for wireless devices
+# systemctl start dhcpcd@eth0  # eth0 or enp0s3 or another wired interface...
+# systemctl enable dhcpcd@eth0
+```
+##### Wireless
+TODO
+
+### Fastest mirror [(mirrors)](https://wiki.archlinux.org/index.php/mirrors)
+```
+# cd /etc/pacman.d
+# cp mirrorlist mirrorlist.backup
+# rankmirrors -n 6 mirrorlist.backup > mirrorlist
+# pacman -Syy  #update package list
 ```
 
 ### System language
@@ -159,28 +178,6 @@ EOF
   VC Keymap: es
   X11 Layout: es
   X11 Model: pc105
-```
-
-### Create a new user [(users and groups)](https://wiki.archlinux.org/index.php/users_and_groups#Example_adding_a_user)
-```
-# useradd -m -g users -G wheel -s /bin/bash wchmb
-# passwd wchmb	
-# passwd -d wchmb  # to login without passwd
-```
-
-### Internet connection
-```
-$ ip link                      # or 'iw dev' for wireless devices
-# systemctl start dhcpcd@eth0  # eth0 or enp0s3 or another wired interface...
-# systemctl enable dhcpcd@eth0
-```
-
-### Fastest mirror [(mirrors)](https://wiki.archlinux.org/index.php/mirrors)
-```
-# cd /etc/pacman.d
-# cp mirrorlist mirrorlist.backup
-# rankmirrors -n 6 mirrorlist.backup > mirrorlist
-# pacman -Syy  #update package list
 ```
 
 ### Graphical user interface [(xorg)](https://www.archlinux.org/groups/x86_64/xorg/)
@@ -232,6 +229,12 @@ Really needed? You kids...
 # systemctl start gdm
 ```
 
+### Create a new user [(users and groups)](https://wiki.archlinux.org/index.php/users_and_groups#Example_adding_a_user)
+```
+# useradd -m -g users -G wheel -s /bin/bash wchmb
+# passwd wchmb	
+# passwd -d wchmb  # to login without passwd
+```
 
 # [Resources](#resources)  
 [1] https://wiki.archlinux.org/index.php/beginners'_guide  
