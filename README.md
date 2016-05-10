@@ -1,30 +1,37 @@
 # arch-install
 
 # Index
-1. [Get Arch](#get-arch)
-2. [Format and Mount partitions](#format)
-  * [GPT](#gpt)
-  * [MBR](#mbr)
+1. [Preparation]  
+  1.1. [Get Arch](#get-arch)  
+2. [Installation]  
+  2.2. [Format and Mount partitions](#format)  
+    * [GPT](#gpt)  
+    * [MBR](#mbr)  
+3. [Set-up]  
+4. [Resources](#resources)
 
-# [Get Arch](#get-arch)
-Download the latest ISO image from https://www.archlinux.org/download/
+
+
+##### [Get Arch](#get-arch)
+Download the latest ISO image from https://www.archlinux.org/download/  
 Write to a USB stick
 ```
 $ df
-...
-/dev/sdc1  16G  7.5G  8.2G  48% /run/media/wchmb/347E-D4CB
+  ...
+  /dev/sdc1  16G  7.5G  8.2G  48% /run/media/wchmb/347E-D4CB
 # dd if=/home/wchmb/Downloads/arch.iso of=/dev/sdc
 ```
 
-### Set keyboard layout
+##### Set keyboard layout
 ```
 # loadkeys es
 ```
 
-### Connect to the Internet
+##### Connect to the Internet
 ```
-# iw dev               # list wireless interfaces
-# wifi-menu -o wlp3s0  # connect to specific interface
+# iw dev                    # list wireless interfaces
+# wifi-menu -o wlp3s0       # connect to specific interface
+# ping -c 3 www.google.com  # test it
 ```
 
 ##### Use system clock
@@ -50,7 +57,7 @@ $ df
 # mkfs -t ext4 /dev/sda4
 -# mkswap /dev/sda4
 -# swapon /dev/sda4  # activate swap
-		
+
 # mount /dev/sda3 /mnt
 # mkdir /mnt/boot /mnt/home
 # mount /dev/sda2 /mnt/boot
@@ -64,7 +71,6 @@ $ df
 # pacstrap /mnt base  # base system
 ```	
 
-
 ##### Configure the system
 ```
 # genfstab -Up /mnt >> /mnt/etc/fstab  # generate fstab with UUIDs
@@ -75,7 +81,6 @@ $ df
 ```
 # mkinitcpio -p linux
 ```	
-
 
 ##### Install a boot loader in BIOS/GPT
 ! Attention: if you install 'os-prober' grub-mkconfig may fail
@@ -157,7 +162,7 @@ $ ip link                      # or 'iw dev' for wireless devices
 
 ##### Graphical user interface (https://www.archlinux.org/groups/x86_64/xorg/)
 ```	
-(*)$ lspci | grep -e VGA -e 3D    # If you do not know what graphics card you have
+$ lspci | grep -e VGA -e 3D       # If you do not know what graphics card you have
 # pacman -S xorg-server xorg-xinit xorg-utils xorg-server-utils  # default Xorg environment
 # pacman -S mesa mesa-demos       # 3D graphics support
 # pacman -S xf86-video-intel      # intel video drivers
@@ -166,11 +171,12 @@ $ ip link                      # or 'iw dev' for wireless devices
 	
 # pacman -S xorg-twm xorg-xclock xterm	
 ```
-#! After testing X you can remove 'xorg-twm', 'xorg-xclock' and 'xterm'
+*After testing X you can remove 'xorg-twm', 'xorg-xclock' and 'xterm'*
 
+Test X Windows System
 ```
-# startx
-# exit
+# startx  # run Xorg
+# exit    # quit
 ```
 
 ##### Autostart X at login
@@ -191,20 +197,20 @@ $ cat ~/.xinitrc
 	
 $ cat <<EOF >>  ~/.bash_profile
   # autostart X at login
-  -z $DISPLAY && $XDG_VTNR -eq 1  && exec startx
+  [[ -z $DISPLAY && $XDG_VTNR -eq 1 ]]  && exec startx
   EOF
 ```
 
 
-##### (*)Alternative-> Use display manager
+##### Alternative: Use display manager
 ```
 # pacman -S gdm  # gdm, lxdm ...
 # systemctl enable gdm
 # systemctl start gdm
 ```
 
-Resources:  
+[Resources](#resources)  
 [1] https://wiki.archlinux.org/index.php/beginners'_guide  
 [2] https://wiki.archlinux.org/index.php/General_recommendations  
-[3] VIRTUALBOX emulation: http://wideaperture.net/blog/?p=3851  
+[3] https://wiki.archlinux.org/index.php/installation_guide
 [4] https://github.com/helmuthdu/aui  
