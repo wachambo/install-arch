@@ -140,7 +140,8 @@ $ ip link                      # or 'iw dev' for wireless devices
 # systemctl enable dhcpcd@eth0
 ```
 ##### Wireless
-TODO
+[Go to WiFi](../master/wifi.md)
+
 
 ### Fastest mirror [(mirrors)](https://wiki.archlinux.org/index.php/mirrors)
 ```
