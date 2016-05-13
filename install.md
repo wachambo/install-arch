@@ -1,4 +1,21 @@
-# arch-install
+# ARCH Linux [install | configur]ation process
+
+tl;dr
+
+Arch is my favourite Linux distro.  
+- Lack of bloatware: Gives you the minimum you need and you decide what you want to add to that.  
+- System processes are not obfuscated behind a user interface.  
+- Instead of be a idiot-proof* distribution, it forces you to learn what each configuration file and important terminal command does early on.  
+- So, if you expected "friendly" GUI installation tools, then, oh dear, take a seat and wait.
+
+*Don't get me wrong, I'm not saying Ubuntu users are stupid. On the contrary, Ubuntu is an excelent way to start in the GNU/Linux world.
+
+**This repo aims to (and will) help you to install and configure Arch in a quick and simply way.**  
+*If you miss something, please tell me and I'll update asap :)*
+
+Before continue, please read [The Arch Way](https://wiki.archlinux.org/index.php/Arch_Linux#Principles) and keep in mind the [KISS](https://en.wikipedia.org/wiki/KISS_principle) principle.  
+I also strongly recommend you to read the official documentation -> [Resources](#resources).  
+And if you are courious, take a look this super insteresting project of a guy who made Bash scripts to install and configure Arch...Wow! -> https://github.com/helmuthdu/aui  
 
 # Index
 1. [Preparation](#preparation)  
