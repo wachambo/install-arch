@@ -1,5 +1,6 @@
 # Wireless network configuration
-
+I'm only interested in manual management configuration, the only way to learn.  
+The purpose of this manual is not showing how to automated tools like [NetworkManager](https://wiki.archlinux.org/index.php/NetworkManager) or [Wicd](https://wiki.archlinux.org/index.php/Wicd).
 
 1. Check kernel messages for firmware being loaded
 
