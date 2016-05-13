@@ -35,8 +35,8 @@
 
 4. Access point discovery
    ```
-   # iw dev wlp3s0 scan | less    # Important points to check: 
-                                  # SSID, Security, Group,  Pairwise and Authentication
+   # iw dev wlp3s0 scan | less  # Important points to check: 
+                                 # SSID, Security, Group,  Pairwise and Authentication
    ```
 
 5. Make a configuration file for wpa_supplicant 
