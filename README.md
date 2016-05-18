@@ -199,6 +199,16 @@ EOF
 ```
 
 ### Graphical user interface [(xorg)](https://www.archlinux.org/groups/x86_64/xorg/)
+|Brand    |Type         |Driver              |OpenGL              |OpenGL (Multilib)         |Documentation|
+|:--------|:------------|:-------------------|:-------------------|:-------------------------|:------------|
+|AMD/ATI  |Open source  |xf86-video-amdgpu   |mesa-libgl          |lib32-mesa-libgl          |[AMDGPU](https://wiki.archlinux.org/index.php/AMDGPU)|
+|AMD/ATI  |Open source  |xf86-video-ati      |mesa-libgl          |lib32-mesa-libgl          |[ATI](https://wiki.archlinux.org/index.php/ATI)|
+|AMD/ATI  |Proprietary  |catalys             |catalyst-libgl      |lib32-catalyst-libgl      |[AMD Catalyst](https://wiki.archlinux.org/index.php/AMD_Catalyst)|
+|Intel    |Open source  |xf86-video-intel    |mesa-libgl          |lib32-mesa-libgl          |[Intel graphics](https://wiki.archlinux.org/index.php/Intel_graphics)|
+|Nvidia   |Open source  |xf86-video-nouveau  |mesa-libgl          |lib32-mesa-libgl          |[Nouveau](https://wiki.archlinux.org/index.php/Nouveau)|
+|Nvidia   |Proprietary  |nvidia              |nvidia-libgl        |lib32-nvidia-libgl        |[NVIDIA](https://wiki.archlinux.org/index.php/NVIDIA)|
+|Nvidia   |Proprietary  |nvidia-340xx        |nvidia-340xx-libgl  |lib32-nvidia-340xx-libgl  |[NVIDIA](https://wiki.archlinux.org/index.php/NVIDIA)|
+|Nvidia   |Proprietary  |nvidia-304xx        |nvidia-304xx-libgl  |lib32-nvidia-304xx-libgl  |[NVIDIA](https://wiki.archlinux.org/index.php/NVIDIA)|
 ```	
 $ lspci | grep -e VGA -e 3D       # If you do not know what graphics card you have
 # pacman -S xorg-server xorg-xinit xorg-utils xorg-server-utils  # default Xorg environment
