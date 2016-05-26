@@ -18,9 +18,9 @@ The purpose of this manual is not showing how to automated tools like [NetworkMa
    
 2. Find the name of wireless interface and bring up before you can use iw
    ```
-   # iw dev                 # also ip link
+   # iw link                 # also 'ip dev'
    # ip link set wlp3s0 up
-   # ip link show wlp3s0    # to verify
+   # ip link show wlp3s0    # to verify, also 'iw dev wlp3s0 link'
    ```
 
 3. Manual wireless management
